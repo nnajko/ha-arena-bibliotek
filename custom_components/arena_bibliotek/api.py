@@ -187,8 +187,10 @@ def parse_fees(soup: BeautifulSoup) -> float | None:
 
 def parse_overview(html_text: str) -> AccountData:
     soup = BeautifulSoup(html_text, "html.parser")
-    if soup.select_one("input.arena-login-password") and not soup.select_one(".portlet-myLoans"):
-        raise ArenaAuthError("Not logged in")
+    # The PIN field is only on "Mina sidor" when you are NOT logged in (a rejected login shows the
+    # form again, while the portlet frames are still rendered empty)
+    if soup.select_one("input.arena-login-password"):
+        raise ArenaAuthError("Not logged in (wrong card number/PIN?)")
     return AccountData(
         loans=parse_loans(soup),
         reservations=parse_reservations(soup),
