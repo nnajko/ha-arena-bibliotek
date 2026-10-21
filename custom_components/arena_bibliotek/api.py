@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import asyncio
 from dataclasses import asdict, dataclass, field
-from datetime import date
+from datetime import date, datetime, timezone
 import logging
 import re
 
@@ -86,6 +86,36 @@ class AccountData:
     loans: list[Loan]
     reservations: list[Reservation]
     fees: float | None
+    fetched_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+
+    def to_storage(self) -> dict:
+        """JSON-safe dict for the on-disk cache (keeps renewal checkbox values out)."""
+        return {
+            "loans": [l.as_dict() for l in self.loans],
+            "reservations": [r.as_dict() for r in self.reservations],
+            "fees": self.fees,
+            "fetched_at": self.fetched_at.isoformat(),
+        }
+
+    @classmethod
+    def from_storage(cls, data: dict) -> "AccountData":
+        def _d(v):
+            return date.fromisoformat(v) if v else None
+
+        loans = [
+            Loan(**{**l, "loan_date": _d(l.get("loan_date")), "due_date": _d(l.get("due_date")),
+                    "record_id": None, "checkbox_value": None})
+            for l in data.get("loans", [])
+        ]
+        reservations = [
+            Reservation(**{**r, "pickup_by": _d(r.get("pickup_by"))}) for r in data.get("reservations", [])
+        ]
+        return cls(
+            loans=loans,
+            reservations=reservations,
+            fees=data.get("fees"),
+            fetched_at=datetime.fromisoformat(data["fetched_at"]),
+        )
 
 
 def _text(el: Tag | None) -> str | None:

@@ -43,6 +43,9 @@
       },
       "fees": {
         "name": "Fees"
+      },
+      "last_updated": {
+        "name": "Last updated"
       }
     },
     "button": {

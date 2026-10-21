@@ -24,8 +24,15 @@ Visar dina **boklån, reservationer och avgifter** från bibliotek som använder
 | `sensor.…_reservationer` | Antal reservationer |
 | `sensor.…_reservationer_att_hamta` | Reservationer som är klara att hämta |
 | `sensor.…_avgifter` | Avgifter i kr |
+| `sensor.…_senast_uppdaterad` | När data senast hämtades från biblioteket (diagnostik) |
 | `button.…_uppdatera` | Hämtar direkt (annars var 6:e timme) |
 | `button.…_lana_om_alla` | Lånar om alla lån som går att låna om |
+
+## Cache
+
+Senaste hämtningen sparas i Home Assistant (`.storage`). Efter en omstart visas lånen direkt, och
+är biblioteket nere fortsätter sensorerna visa senast kända data (attributet `cached: true`) och nya
+försök görs var 30:e minut i stället för var 6:e timme. En nekad inloggning döljs aldrig av cachen.
 
 ## Låna om
 

@@ -8,6 +8,7 @@ from datetime import date
 from typing import Any
 
 from homeassistant.components.sensor import SensorDeviceClass, SensorEntity, SensorEntityDescription
+from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceEntryType, DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -84,6 +85,14 @@ SENSORS: tuple[ArenaSensorDescription, ...] = (
         attrs_fn=lambda d: {"titles": [r.title for r in d.reservations if r.ready]},
     ),
     ArenaSensorDescription(
+        key="last_updated",
+        translation_key="last_updated",
+        icon="mdi:cloud-sync",
+        device_class=SensorDeviceClass.TIMESTAMP,
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=lambda d: d.fetched_at,
+    ),
+    ArenaSensorDescription(
         key="fees",
         translation_key="fees",
         icon="mdi:cash",
@@ -129,4 +138,8 @@ class ArenaSensor(CoordinatorEntity[ArenaCoordinator], SensorEntity):
     @property
     def extra_state_attributes(self) -> dict[str, Any] | None:
         fn = self.entity_description.attrs_fn
-        return fn(self.coordinator.data) if fn else None
+        attrs = fn(self.coordinator.data) if fn else {}
+        if self.entity_description.key in ("loans", "last_updated"):
+            # True while the library is unreachable and cached data is shown
+            attrs["cached"] = self.coordinator.stale
+        return attrs or None

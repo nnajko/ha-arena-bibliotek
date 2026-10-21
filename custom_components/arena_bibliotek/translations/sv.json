@@ -43,6 +43,9 @@
       },
       "fees": {
         "name": "Avgifter"
+      },
+      "last_updated": {
+        "name": "Senast uppdaterad"
       }
     },
     "button": {

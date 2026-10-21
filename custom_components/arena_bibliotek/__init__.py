@@ -66,7 +66,9 @@ async def async_renew(
         outcomes, after = await coordinator.client.renew(choose, dry_run=dry_run)
     except ArenaError as err:
         raise HomeAssistantError(f"Omlån misslyckades: {err}") from err
-    if after is not None:
+    if after is not None and not dry_run:
+        await coordinator.async_save(after)
+        coordinator.stale = False
         coordinator.async_set_updated_data(after)
     results = [o.as_dict() for o in outcomes]
     if not dry_run:
@@ -109,6 +111,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 async def async_setup_entry(hass: HomeAssistant, entry: ArenaConfigEntry) -> bool:
     client = ArenaClient(entry.data[CONF_BASE_URL], entry.data[CONF_USERNAME], entry.data[CONF_PASSWORD])
     coordinator = ArenaCoordinator(hass, entry, client)
+    await coordinator.async_load_cache()
     await coordinator.async_config_entry_first_refresh()
     entry.runtime_data = coordinator
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
