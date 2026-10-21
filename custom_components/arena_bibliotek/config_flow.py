@@ -51,8 +51,12 @@ class ArenaConfigFlow(ConfigFlow, domain=DOMAIN):
             errors = await _validate(base_url, username, user_input[CONF_PASSWORD])
             if not errors:
                 host = urlparse(base_url).netloc.removeprefix("bibliotek.")
+                title = f"Bibliotek {host.split('.')[0].capitalize()}"
+                # Card digits only when needed to tell two cards apart (keeps entity ids clean)
+                if any(e.title == title for e in self._async_current_entries()):
+                    title = f"{title} (…{username[-4:]})"
                 return self.async_create_entry(
-                    title=f"Bibliotek {host.split('.')[0].capitalize()} (…{username[-4:]})",
+                    title=title,
                     data={CONF_BASE_URL: base_url, CONF_USERNAME: username, CONF_PASSWORD: user_input[CONF_PASSWORD]},
                 )
         schema = vol.Schema(
