@@ -1,0 +1,81 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Library (Axiell Arena)",
+        "description": "Log in with the same details as on the library website (BankID is not supported, use your PIN).",
+        "data": {
+          "base_url": "Library web address",
+          "username": "Library card number or personal ID number",
+          "password": "PIN"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Log in again",
+        "description": "The login was rejected. Enter your current PIN.",
+        "data": {
+          "password": "PIN"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Wrong card number/ID number or PIN.",
+      "cannot_connect": "Could not reach the library (or the site does not look like Axiell Arena)."
+    },
+    "abort": {
+      "already_configured": "This library card is already added.",
+      "reauth_successful": "Login works again."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "loans": {
+        "name": "Loans"
+      },
+      "next_due": {
+        "name": "Next due date"
+      },
+      "reservations": {
+        "name": "Reservations"
+      },
+      "reservations_ready": {
+        "name": "Reservations ready for pickup"
+      },
+      "fees": {
+        "name": "Fees"
+      }
+    },
+    "button": {
+      "refresh": {
+        "name": "Refresh"
+      },
+      "renew_all": {
+        "name": "Renew all"
+      }
+    }
+  },
+  "services": {
+    "renew": {
+      "name": "Renew",
+      "description": "Renews loans on the library card. Without filters, every renewable loan is renewed.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Library card",
+          "description": "Which card (empty = all)."
+        },
+        "titles": {
+          "name": "Titles",
+          "description": "Only loans whose title contains one of these texts."
+        },
+        "due_within_days": {
+          "name": "Due within",
+          "description": "Only loans due within this many days."
+        },
+        "dry_run": {
+          "name": "Dry run",
+          "description": "Show what would be renewed without doing it."
+        }
+      }
+    }
+  }
+}

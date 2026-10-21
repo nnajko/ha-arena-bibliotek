@@ -1,0 +1,81 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Bibliotek (Axiell Arena)",
+        "description": "Logga in med samma uppgifter som på bibliotekets webbplats (BankID stöds inte, använd PIN-kod).",
+        "data": {
+          "base_url": "Bibliotekets webbadress",
+          "username": "Bibliotekskortsnummer eller personnummer",
+          "password": "PIN-kod"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Logga in igen",
+        "description": "Inloggningen nekades. Ange din aktuella PIN-kod.",
+        "data": {
+          "password": "PIN-kod"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Fel kortnummer/personnummer eller PIN-kod.",
+      "cannot_connect": "Kunde inte nå biblioteket (eller sidan ser inte ut som Axiell Arena)."
+    },
+    "abort": {
+      "already_configured": "Det här bibliotekskortet är redan tillagt.",
+      "reauth_successful": "Inloggningen fungerar igen."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "loans": {
+        "name": "Lån"
+      },
+      "next_due": {
+        "name": "Nästa återlämning"
+      },
+      "reservations": {
+        "name": "Reservationer"
+      },
+      "reservations_ready": {
+        "name": "Reservationer att hämta"
+      },
+      "fees": {
+        "name": "Avgifter"
+      }
+    },
+    "button": {
+      "refresh": {
+        "name": "Uppdatera"
+      },
+      "renew_all": {
+        "name": "Låna om alla"
+      }
+    }
+  },
+  "services": {
+    "renew": {
+      "name": "Låna om",
+      "description": "Lånar om lån på bibliotekskortet. Utan urval lånas alla som går att låna om.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Bibliotekskort",
+          "description": "Vilket kort (tomt = alla)."
+        },
+        "titles": {
+          "name": "Titlar",
+          "description": "Bara lån vars titel innehåller någon av texterna."
+        },
+        "due_within_days": {
+          "name": "Förfaller inom",
+          "description": "Bara lån som ska lämnas tillbaka inom så här många dagar."
+        },
+        "dry_run": {
+          "name": "Testkörning",
+          "description": "Visa vad som skulle lånas om utan att göra det."
+        }
+      }
+    }
+  }
+}

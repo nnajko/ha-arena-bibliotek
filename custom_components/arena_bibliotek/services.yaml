@@ -1,0 +1,23 @@
+renew:
+  fields:
+    config_entry_id:
+      selector:
+        config_entry:
+          integration: arena_bibliotek
+    titles:
+      example: '["Alfons"]'
+      selector:
+        text:
+          multiple: true
+    due_within_days:
+      example: 3
+      selector:
+        number:
+          min: 0
+          max: 365
+          mode: box
+          unit_of_measurement: dagar
+    dry_run:
+      default: false
+      selector:
+        boolean:

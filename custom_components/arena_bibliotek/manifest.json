@@ -1,0 +1,16 @@
+{
+  "domain": "arena_bibliotek",
+  "name": "Bibliotek (Axiell Arena)",
+  "codeowners": [
+    "@nnajko"
+  ],
+  "config_flow": true,
+  "documentation": "https://github.com/nnajko/ha-arena-bibliotek",
+  "integration_type": "service",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/nnajko/ha-arena-bibliotek/issues",
+  "requirements": [
+    "beautifulsoup4==4.13.3"
+  ],
+  "version": "0.1.0"
+}
