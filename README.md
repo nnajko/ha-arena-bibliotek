@@ -19,7 +19,7 @@ Visar dina **boklån, reservationer och avgifter** från bibliotek som använder
 
 | Entitet | Innehåll |
 |---|---|
-| `sensor.…_lan` | Antal lån. Attributet `loans` listar varje lån: titel, författare, medietyp, lånedatum, **återlämningsdatum**, om det går att låna om och antal omlån kvar |
+| `sensor.…_lan` | Antal lån. Attributet `loans` listar varje lån: titel, författare, medietyp, lånedatum, **återlämningsdatum**, om det går att låna om, antal omlån kvar, post-id och omslag (`cover`) |
 | `sensor.…_nasta_aterlamning` | Datum för nästa återlämning, med titlar och `days_left` |
 | `sensor.…_reservationer` | Antal reservationer |
 | `sensor.…_reservationer_att_hamta` | Reservationer som är klara att hämta |
@@ -27,6 +27,24 @@ Visar dina **boklån, reservationer och avgifter** från bibliotek som använder
 | `sensor.…_senast_uppdaterad` | När data senast hämtades från biblioteket (diagnostik) |
 | `button.…_uppdatera` | Hämtar direkt (annars var 6:e timme) |
 | `button.…_lana_om_alla` | Lånar om alla lån som går att låna om |
+
+## Omslag
+
+Varje lån och reservation har attributet `cover`, en adress i Home Assistant
+(`/api/arena_bibliotek/cover/<post-id>`) till bokens omslag. Biblioteket skickar omslagen utan
+cache-huvuden, så integrationen hämtar varje omslag en gång, förminskar det till högst 600 × 800 px och
+sparar det i Home Assistants cache-katalog (`.cache/arena_bibliotek/covers`, ingår inte i
+säkerhetskopior). Sedan svarar Home Assistant själv, med lång cachetid i webbläsaren. Bara
+poster som finns på ett kort hämtas. Saknar boken omslag är `cover` ändå satt men svarar 404,
+och biblioteket tillfrågas igen efter ett dygn (omslag kommer och går hos biblioteket). Fel och
+"för många anrop" (429) räknas inte som saknat omslag, och efter 429 väntar integrationen den tid
+biblioteket anger. Biblioteket tillfrågas om ett omslag i taget, med minst en sekund emellan, så
+en lång lånelista som visas första gången inte blir en skur av anrop. Omslag till böcker som inte längre finns
+på något kort tas bort efter 30 dagar.
+
+Har biblioteket lagt till eller bytt ett omslag tömmer åtgärden `arena_bibliotek.clear_covers`
+cachen, och varje omslag hämtas igen nästa gång det visas. Cachen töms också av sig själv vid
+start om den största storleken har ändrats i en ny version.
 
 ## Cache
 
